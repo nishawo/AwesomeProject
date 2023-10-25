@@ -7,6 +7,7 @@ import SplashScreen from 'react-native-splash-screen';
 const Stack = createNativeStackNavigator();
 
 const App = () => {
+  console.log('test');
   React.useEffect(() => {
     async function prepare() {
       try {
