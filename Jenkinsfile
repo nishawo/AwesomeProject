@@ -20,7 +20,7 @@ pipeline {
                     println "\n\n-- Build caused by either Multi-Branch Pipeline Scanning -or- Timer i.e. not directly by a logged in user\n";
                     BUILD_USER = "Multi_Branch_Scan_or_Timer"
                 }
-                echo "${BUILD_USER}"
+                    echo "${BUILD_USER}"
 
                  }
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
@@ -42,7 +42,7 @@ pipeline {
     
     post {
         success {
-           
+            echo "${BUILD_USER}"
             echo 'Pipeline completed successfully.'
         }
         failure {
