@@ -10,10 +10,7 @@ pipeline {
         stage('Build React App') {
             steps {
                 echo "${env.BUILD_USER_ID}"
-                  wrap([$class: 'BuildUser']) {
-                    def user = env.BUILD_USER_ID
-                    echo "${user}"
-                }
+                
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
             }
         }
