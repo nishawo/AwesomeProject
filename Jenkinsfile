@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
-                echo "${BUILD_USER}"
+                echo "${BUILD_USER} ${env.BUILD_USER_ID}"
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
             }
         }
