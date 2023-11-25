@@ -4,6 +4,7 @@ pipeline {
     environment {
         DOCKER_IMAGE = 'payrixonboarding-api-v1.dashboard'
         DESTINATION_FOLDER = '/D/projects/React-Native'
+        BUILD_USER = 'ToBeSet'
     }
     
     stages {
@@ -11,8 +12,7 @@ pipeline {
             steps {
                  script {
                 def build = currentBuild.rawBuild
-                def BUILD_USER = "ToBeSet"
-
+                
                 try {
                     def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
                     BUILD_USER = cause.getUserName()
