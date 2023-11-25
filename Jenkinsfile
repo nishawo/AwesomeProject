@@ -9,6 +9,7 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
+                 script {
                 def build = currentBuild.rawBuild
                 def BUILD_USER = "ToBeSet"
 
@@ -21,7 +22,7 @@ pipeline {
                 }
                 echo "${BUILD_USER}"
 
-                
+                 }
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
             }
         }
