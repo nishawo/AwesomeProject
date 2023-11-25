@@ -22,11 +22,12 @@ pipeline {
                 }
                     echo "${BUILD_USER}"
 
-                    def jsExport = readFile "src/app-config.js"
-                    def regex = /version\s*:\s*'([\d.]+)'\s*,/
-                    def result = (jsExport =~ regex)
+                    def jsExport = readFile("src/app-config.js")
+                    println(jsExport)
+                    // def regex = /version\s*:\s*'([\d.]+)'\s*,/
+                    // def result = (jsExport =~ regex)
                     
-                    echo "${result[0][0]}"
+                    // echo "${result[0][0]}"
                  }
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
             }
