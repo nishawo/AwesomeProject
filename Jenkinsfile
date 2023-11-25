@@ -22,8 +22,8 @@ pipeline {
                 }
                     echo "${BUILD_USER}"
 
-                 def jsExport = readFile "src/app-config.js"
-                    def regex = """(?<=version: ")(.*\n?)(?=",)"""
+                    def jsExport = readFile "src/app-config.js"
+                    def regex = /version\s*:\s*'([\d.]+)'\s*,/
                     def result = (jsExport =~ regex)
                     
                     echo "${result[0][0]}"
