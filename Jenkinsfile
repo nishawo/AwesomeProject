@@ -9,7 +9,18 @@ pipeline {
     stages {
         stage('Build React App') {
             steps {
-                echo "${env.BUILD_USER_ID} ${env.BUILD_USER}"
+                def build = currentBuild.rawBuild
+                def BUILD_USER = "ToBeSet"
+
+                try {
+                    def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
+                    BUILD_USER = cause.getUserName()
+                } catch(Exception ex) {
+                    println "\n\n-- Build caused by either Multi-Branch Pipeline Scanning -or- Timer i.e. not directly by a logged in user\n";
+                    BUILD_USER = "Multi_Branch_Scan_or_Timer"
+                }
+                echo "${BUILD_USER}"
+
                 
                 // sh 'docker build -t ${DOCKER_IMAGE} .'
             }
