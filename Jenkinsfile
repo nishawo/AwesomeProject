@@ -26,7 +26,7 @@ pipeline {
                     // echo "${jsExport}"
                     def configFile = sh 'cat config/config.ts'  
                     echo "${configFile}"
-                    def version = sh "echo ${configFile} | grep -o -E \"version: /version\s*:\s*'([\d.]+)'\s*,/\" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
+                    def version = sh "echo ${configFile} | grep -o -E "version: /version\s*:\s*'([\d.]+)'\s*,/" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
 
                     // def regex = /version\s*:\s*'([\d.]+)'\s*,/
                     // def result = (jsExport =~ regex)
