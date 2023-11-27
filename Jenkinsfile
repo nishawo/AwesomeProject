@@ -16,6 +16,16 @@ pipeline {
                 try {
                     def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
                     BUILD_USER = cause.getUserName()
+                    def configFile = sh(script: 'cat src/app-config.js', returnStdout: true).trim()
+                    echo "${configFile}"
+                    def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
+                    def version = versionMatch ? versionMatch[0][1] : null
+
+                    if (version == null) {
+                    error 'Failed to extract version from config file.'
+                    }
+
+                    echo "Version: ${version}"
                 } catch(Exception ex) {
                     println "\n\n-- Build caused by either Multi-Branch Pipeline Scanning -or- Timer i.e. not directly by a logged in user\n";
                     BUILD_USER = "Multi_Branch_Scan_or_Timer"
@@ -28,16 +38,7 @@ pipeline {
                     // echo "${configFile}"
                     // def version = sh "echo ${configFile} | grep -o -E "version: /version\s*:\s*'([\d.]+)'\s*,/" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
 
-                    def configFile = sh(script: 'cat src/app-config.js', returnStdout: true).trim()
-
-                    def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
-                    def version = versionMatch ? versionMatch[0][1] : null
-
-                    if (version == null) {
-                    error 'Failed to extract version from config file.'
-                    }
-
-                    echo "Version: ${version}"
+                  
                     // def regex = /version\s*:\s*'([\d.]+)'\s*,/
                     // def result = (jsExport =~ regex)
                     
