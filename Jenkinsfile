@@ -24,10 +24,20 @@ pipeline {
 
                     // def jsExport = readFile("src/app-config.js")
                     // echo "${jsExport}"
-                    def configFile = sh 'cat config/config.ts'  
-                    echo "${configFile}"
-                    def version = sh "echo ${configFile} | grep -o -E "version: /version\s*:\s*'([\d.]+)'\s*,/" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
+                    // def configFile = sh 'cat config/config.ts'  
+                    // echo "${configFile}"
+                    // def version = sh "echo ${configFile} | grep -o -E "version: /version\s*:\s*'([\d.]+)'\s*,/" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
 
+                    def configFile = sh(script: 'cat config/config.ts', returnStdout: true).trim()
+
+                    def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
+                    def version = versionMatch ? versionMatch[0][1] : null
+
+                    if (version == null) {
+                    error 'Failed to extract version from config file.'
+                    }
+
+                    echo "Version: ${version}"
                     // def regex = /version\s*:\s*'([\d.]+)'\s*,/
                     // def result = (jsExport =~ regex)
                     
