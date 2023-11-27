@@ -1,3 +1,4 @@
+def fileContents
 pipeline {
     agent any
     
@@ -24,10 +25,10 @@ pipeline {
                     echo "${BUILD_USER}"
 
                     // Read and extract version from app-config.js
-                    def configFile = readFile("./src/app-config.js")
-                    // echo "configFile ${configFile}"
-                    def versionMatch = (configFile =~ /version\s*:\s*'([\d.]+)'\s*,/)
-                    echo "${versionMatch[0][1]}"
+                    fileContents =  readFile 'src/app-config.js'
+                    echo "configFile ${fileContents}"
+                    // def versionMatch = (configFile =~ /version\s*:\s*'([\d.]+)'\s*,/)
+                    // echo "${versionMatch[0][1]}"
                    
 
                     // def jsExport = readFile("src/app-config.js")
