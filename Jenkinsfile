@@ -23,7 +23,7 @@ pipeline {
                     }
                     echo "${BUILD_USER}"
 
-                    try {
+                    
                         def configFile = readFile('src/app-config.js')
                         echo "${configFile}"
                         def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
@@ -34,9 +34,7 @@ pipeline {
                         }
 
                         echo "Version: ${version}"
-                    } catch(Exception ex) {
-                        echo "${ex.getMessage()}"
-                    }
+                   
 
                     // def jsExport = readFile("src/app-config.js")
                     // echo "${jsExport}"
