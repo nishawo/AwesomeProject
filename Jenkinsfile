@@ -24,7 +24,7 @@ pipeline {
                     echo "${BUILD_USER}"
 
                     try {
-                         def configFile = sh(script: 'cat ./src/app-config.js', returnStdout: true).trim()
+                        def configFile = readFile('src/app-config.js')
                         echo "${configFile}"
                         def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
                         def version = versionMatch ? versionMatch[0][1] : null
