@@ -25,7 +25,7 @@ pipeline {
                     echo "${BUILD_USER}"
 
                     // Read and extract version from app-config.js
-                    fileContents =  readFile 'src/app-config.js'
+                    fileContents =  readFile 'metro.config.js'
                     echo "configFile ${fileContents}"
                     // def versionMatch = (configFile =~ /version\s*:\s*'([\d.]+)'\s*,/)
                     // echo "${versionMatch[0][1]}"
