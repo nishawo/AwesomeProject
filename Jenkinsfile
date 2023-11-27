@@ -2,7 +2,6 @@ def appVonfigContents
 def version
 def port
 def host
-def fileContents
 pipeline {
     agent any
 
@@ -25,14 +24,14 @@ pipeline {
 
                    
                     // Dynamically replace values based on environment variables
-                    fileContents = fileContents.replaceAll(/process\.env\.(\w+)/) { _, key ->
+                    appVonfigContents = appVonfigContents.replaceAll(/process\.env\.(\w+)/) { _, key ->
                         // Read corresponding values from environment variables
                         def envValue = sh(script: "echo \${${key}}", returnStdout: true).trim()
                         envValue ?: "''"  // Replace with an empty string if the environment variable is not set
                     }
 
                     // Use a regular expression to extract the exported object
-                    def objectMatch = fileContents =~ /export default (\{[^}]+\});/
+                    def objectMatch = appVonfigContents =~ /export default (\{[^}]+\});/
                     def objectJson = objectMatch ? objectMatch[0][1] : null
 
                     if (objectJson == null) {
