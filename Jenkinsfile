@@ -13,24 +13,30 @@ pipeline {
                  script {
                     def build = currentBuild.rawBuild
                 
-                try {
-                    def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
-                    BUILD_USER = cause.getUserName()
-                    def configFile = sh(script: 'cat src/app-config.js', returnStdout: true).trim()
-                    echo "${configFile}"
-                    def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
-                    def version = versionMatch ? versionMatch[0][1] : null
-
-                    if (version == null) {
-                    error 'Failed to extract version from config file.'
+                    try {
+                        def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
+                        BUILD_USER = cause.getUserName()
+                       
+                    } catch(Exception ex) {
+                        println "\n\n-- Build caused by either Multi-Branch Pipeline Scanning -or- Timer i.e. not directly by a logged in user\n";
+                        BUILD_USER = "Multi_Branch_Scan_or_Timer"
                     }
-
-                    echo "Version: ${version}"
-                } catch(Exception ex) {
-                    println "\n\n-- Build caused by either Multi-Branch Pipeline Scanning -or- Timer i.e. not directly by a logged in user\n";
-                    BUILD_USER = "Multi_Branch_Scan_or_Timer"
-                }
                     echo "${BUILD_USER}"
+
+                    try {
+                         def configFile = sh(script: 'cat ./src/app-config.js', returnStdout: true).trim()
+                        echo "${configFile}"
+                        def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
+                        def version = versionMatch ? versionMatch[0][1] : null
+
+                        if (version == null) {
+                        error 'Failed to extract version from config file.'
+                        }
+
+                        echo "Version: ${version}"
+                    } catch(Exception ex) {
+                        echo "${ex.getMessage()}"
+                    }
 
                     // def jsExport = readFile("src/app-config.js")
                     // echo "${jsExport}"
