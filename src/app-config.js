@@ -12,8 +12,12 @@
 
 const AppConfig = {
   version: '2.1.0',
+  host: '123',
+  port: 4903,
   SHIPPING_CODE_QUERY_PARMAS: 'appcode',
 };
+AppConfig.host = process.env.REACT_APP_DEV_HTTPS_HOST;
+AppConfig.port = process.env.REACT_APP_DEV_HTTPS_PORT;
 const hostArr = document.location.pathname.split('/');
 if (
   Array.isArray(hostArr) &&
