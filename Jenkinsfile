@@ -11,7 +11,7 @@ pipeline {
         stage('Build React App') {
             steps {
                  script {
-                def build = currentBuild.rawBuild
+                    def build = currentBuild.rawBuild
                 
                 try {
                     def cause = build.getCause(hudson.model.Cause.UserIdCause.class)
@@ -22,8 +22,11 @@ pipeline {
                 }
                     echo "${BUILD_USER}"
 
-                    def jsExport = readFile("src/app-config.js")
-                    println(jsExport)
+                    // def jsExport = readFile("src/app-config.js")
+                    // echo "${jsExport}"
+                    def configFile = sh 'cat config/config.ts'  
+                    def version = sh "echo ${configFile} | grep -o -E \"version: /version\s*:\s*'([\d.]+)'\s*,/\" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
+
                     // def regex = /version\s*:\s*'([\d.]+)'\s*,/
                     // def result = (jsExport =~ regex)
                     
