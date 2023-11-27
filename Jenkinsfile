@@ -24,10 +24,10 @@ pipeline {
                     echo "${BUILD_USER}"
 
                     // Read and extract version from app-config.js
-                    def configFile = readFile("src/app-config.js")
-                    echo "configFile ${configFile}"
-                    def versionMatch = (configFile =~ /version\s*:\s*'([\d.]+)'\s*,/)
-                    echo "${versionMatch}"
+                    // def configFile = readFile("src/app-config.js")
+                    // echo "configFile ${configFile}"
+                    // def versionMatch = (configFile =~ /version\s*:\s*'([\d.]+)'\s*,/)
+                    // echo "${versionMatch}"
                    
 
                     // def jsExport = readFile("src/app-config.js")
