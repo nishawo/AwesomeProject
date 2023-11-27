@@ -23,27 +23,35 @@ pipeline {
 
                     echo "Version: ${version}"
 
+                   
+                    // Dynamically replace values based on environment variables
+                    fileContents = fileContents.replaceAll(/process\.env\.(\w+)/) { _, key ->
+                        // Read corresponding values from environment variables
+                        def envValue = sh(script: "echo \${${key}}", returnStdout: true).trim()
+                        envValue ?: "''"  // Replace with an empty string if the environment variable is not set
+                    }
+
                     // Use a regular expression to extract the exported object
-                    def objectMatch = fileContents =~ /const AppConfig = (\{[^}]+\});/
+                    def objectMatch = fileContents =~ /export default (\{[^}]+\});/
                     def objectJson = objectMatch ? objectMatch[0][1] : null
 
                     if (objectJson == null) {
-                        error 'Failed to extract the AppConfig object from config file.'
+                        error 'Failed to extract the AppConfig object from the config file.'
                     }
 
                     // Parse the JSON representation of the object
                     def appConfig = readJSON(text: objectJson)
 
-                    // Access the 'version' property of the AppConfig object
+                    // Access properties of the AppConfig object
+                    version = appConfig.version
                     host = appConfig.host
                     port = appConfig.port
-
-                    if (version == null) {
-                        error 'Failed to extract version from AppConfig object.'
-                    }
+                   
 
                     echo "Version: ${version}"
-                    def url = "https://${host}:${port}"
+                    echo "Host: ${host}"
+                    echo "Port: ${port}"
+                    
                 }
             }
         }
