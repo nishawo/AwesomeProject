@@ -8,7 +8,7 @@ pipeline {
             steps {
                 script {
                     // Read and extract version from metro.config.js
-                    fileContents = readFile('metro.config.js').trim()
+                    fileContents = readFile('src/app-config.js').trim()
                     echo "Config File Contents:\n${fileContents}"
                 }
             }
