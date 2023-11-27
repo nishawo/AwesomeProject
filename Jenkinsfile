@@ -28,7 +28,7 @@ pipeline {
                     // echo "${configFile}"
                     // def version = sh "echo ${configFile} | grep -o -E "version: /version\s*:\s*'([\d.]+)'\s*,/" | grep -o -E \"version\s*:\s*'([\d.]+)'\s*,\") || trow"
 
-                    def configFile = sh(script: 'cat src/app-config.ts', returnStdout: true).trim()
+                    def configFile = sh(script: 'cat src/app-config.js', returnStdout: true).trim()
 
                     def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
                     def version = versionMatch ? versionMatch[0][1] : null
