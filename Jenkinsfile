@@ -24,16 +24,17 @@ pipeline {
                     echo "${BUILD_USER}"
 
                     
-                        def configFile = readFile('src/app-config.js')
-                        echo "${configFile}"
-                        def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
-                        def version = versionMatch ? versionMatch[0][1] : null
+                            def configFile = readFile('src/app-config.js').trim()
+                            echo "Config File Contents:\n${configFile}"
 
-                        if (version == null) {
-                        error 'Failed to extract version from config file.'
-                        }
+                            def versionMatch = configFile =~ /version:\s*'([\d.]+)'\s*,/
+                            def version = versionMatch ? versionMatch[0][1] : null
 
-                        echo "Version: ${version}"
+                            if (version == null) {
+                                error 'Failed to extract version from config file.'
+                            }
+
+                            echo "Version: ${version}"
                    
 
                     // def jsExport = readFile("src/app-config.js")
