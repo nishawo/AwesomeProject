@@ -2,6 +2,7 @@ def appVonfigContents
 def version
 def port
 def host
+def fileContents
 pipeline {
     agent any
 
