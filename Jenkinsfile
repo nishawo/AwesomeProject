@@ -39,7 +39,7 @@ pipeline {
                     def currentBuildObject = currentBuild
 
                     if (LAST_SUCCESSFUL_BUILD) {
-                        def lastSuccessfulBuildObject = currentBuildObject.parent.builds.find { it.number == LAST_SUCCESSFUL_BUILD }
+                        def lastSuccessfulBuildObject = currentBuildObject.getParent().getBuildByNumber(LAST_SUCCESSFUL_BUILD)
 
                         if (lastSuccessfulBuildObject) {
                             def changeSets = currentBuildObject.changeSets
