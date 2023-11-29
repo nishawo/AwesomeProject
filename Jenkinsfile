@@ -39,7 +39,7 @@ pipeline {
                     def currentBuildObject = currentBuild
 
                     if (LAST_SUCCESSFUL_BUILD) {
-                        def lastSuccessfulBuildObject = currentBuildObject.getParent().getBuildByNumber(LAST_SUCCESSFUL_BUILD)
+                        def lastSuccessfulBuildObject = Jenkins.instance.getItemByFullName(JOB_NAME).getBuildByNumber(LAST_SUCCESSFUL_BUILD)
 
                         if (lastSuccessfulBuildObject) {
                             def changeSets = currentBuildObject.changeSets
