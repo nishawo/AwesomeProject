@@ -42,7 +42,7 @@ pipeline {
                         def lastSuccessfulBuildObject = currentBuildObject.getParent().getBuildByNumber(LAST_SUCCESSFUL_BUILD)
 
                         if (lastSuccessfulBuildObject) {
-                            def changeSet = currentBuildObject.getChangeSet()
+                            def changeSet = currentBuildObject.getChangeSets()
                             changes = changeSet.getItems().collect { item ->
                                 "${item.getCommitId()}: ${item.getMsg()}"
                             }
