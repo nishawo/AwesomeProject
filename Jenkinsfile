@@ -17,17 +17,42 @@ pipeline {
                 }
             }
         }
-
         stage('Get Current Build') {
             steps {
                 script {
                     // Get information about the current build
-                    def currentBuild = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastBuild/api/json?tree=number&pretty=true' | jq -r '.number'", returnStdout: true).trim()
-                    echo "Current Build for ${JOB_NAME}: ${currentBuild}"
-                    env.CURRENT_BUILD = currentBuild
+                    def currentBuild = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastBuild/api/json?tree=number&pretty=true'", returnStdout: true).trim()
+
+                    echo "Raw JSON response for current build: ${currentBuild}"
+
+                    def parsedCurrentBuild
+                    try {
+                        parsedCurrentBuild = readJSON(text: currentBuild)
+                        echo "Parsed JSON response for current build: ${parsedCurrentBuild}"
+                    } catch (Exception e) {
+                        error "Error parsing JSON response for current build: ${e.message}"
+                    }
+
+                    if (parsedCurrentBuild && parsedCurrentBuild.number) {
+                        env.CURRENT_BUILD = parsedCurrentBuild.number
+                        echo "Current Build for ${JOB_NAME}: ${env.CURRENT_BUILD}"
+                    } else {
+                        error "No valid current build information found in the JSON response."
+                    }
                 }
             }
         }
+
+        // stage('Get Current Build') {
+        //     steps {
+        //         script {
+        //             // Get information about the current build
+        //             def currentBuild = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastBuild/api/json?tree=number&pretty=true' | jq -r '.number'", returnStdout: true).trim()
+        //             echo "Current Build for ${JOB_NAME}: ${currentBuild}"
+        //             env.CURRENT_BUILD = currentBuild
+        //         }
+        //     }
+        // }
         stage('Get Changes') {
             steps {
                 script {
