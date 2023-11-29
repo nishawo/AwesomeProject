@@ -17,31 +17,34 @@ pipeline {
                 }
             }
         }
-        stage('Get Current Build') {
-            steps {
-                script {
-                    // Get information about the current build
-                    def currentBuild = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastBuild/api/json?tree=number&pretty=true'", returnStdout: true).trim()
+       stage('Get Current Build') {
+        steps {
+            script {
+                // Get information about the current build
+                def currentBuildResponse = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastBuild/api/json?tree=number&pretty=true'", returnStdout: true).trim()
 
-                    echo "Raw JSON response for current build: ${currentBuild}"
+                echo "Raw JSON response for current build: ${currentBuildResponse}"
 
-                    def parsedCurrentBuild
-                    try {
-                        parsedCurrentBuild = readJSON(text: currentBuild)
-                        echo "Parsed JSON response for current build: ${parsedCurrentBuild}"
-                    } catch (Exception e) {
-                        error "Error parsing JSON response for current build: ${e.message}"
-                    }
+                def jsonSlurper = new groovy.json.JsonSlurper()
+                def parsedCurrentBuild
 
-                    if (parsedCurrentBuild && parsedCurrentBuild.number) {
-                        env.CURRENT_BUILD = parsedCurrentBuild.number
-                        echo "Current Build for ${JOB_NAME}: ${env.CURRENT_BUILD}"
-                    } else {
-                        error "No valid current build information found in the JSON response."
-                    }
+                try {
+                    parsedCurrentBuild = jsonSlurper.parseText(currentBuildResponse)
+                    echo "Parsed JSON response for current build: ${parsedCurrentBuild}"
+                } catch (Exception e) {
+                    error "Error parsing JSON response for current build: ${e.message}"
+                }
+
+                if (parsedCurrentBuild && parsedCurrentBuild.number) {
+                    env.CURRENT_BUILD = parsedCurrentBuild.number
+                    echo "Current Build for ${JOB_NAME}: ${env.CURRENT_BUILD}"
+                } else {
+                    error "No valid current build information found in the JSON response."
                 }
             }
         }
+    }
+
 
         // stage('Get Current Build') {
         //     steps {
