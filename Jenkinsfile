@@ -65,6 +65,5 @@ pipeline {
             }
         }
 
-        // ... (rest of your stages)
     }
 }
