@@ -11,12 +11,28 @@ pipeline {
             steps {
                 script {
                     // Get information about the last successful build
-                    def lastSuccessfulBuild = "curl -s '${JENKINS_URL}/job/${JOB_NAME}/api/json?tree=builds[number,result]{0,1}&pretty=true' | jq -r '.builds[] | select(.result == \"SUCCESS\") | .number'"
-                    echo "Last Successful Build for ${JOB_NAME}: ${lastSuccessfulBuild}"
-                    env.LAST_SUCCESSFUL_BUILD = lastSuccessfulBuild
+                    def lastSuccessfulBuildResponse = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/lastSuccessfulBuild/buildNumber'", returnStdout: true).trim()
+
+                    echo "Raw response for last successful build number: ${lastSuccessfulBuildResponse}"
+
+                    def parsedLastSuccessfulBuild
+                    try {
+                        parsedLastSuccessfulBuild = Integer.parseInt(lastSuccessfulBuildResponse)
+                        echo "Parsed last successful build number: ${parsedLastSuccessfulBuild}"
+                    } catch (Exception e) {
+                        error "Error parsing last successful build number: ${e.message}"
+                    }
+
+                    if (parsedLastSuccessfulBuild) {
+                        env.LAST_SUCCESSFUL_BUILD = parsedLastSuccessfulBuild
+                        echo "Last Successful Build for ${JOB_NAME}: ${env.LAST_SUCCESSFUL_BUILD}"
+                    } else {
+                        error "No valid last successful build number found in the response."
+                    }
                 }
             }
         }
+
    
         // stage('Get Changes') {
         //     steps {
