@@ -36,15 +36,17 @@ pipeline {
             steps {
                 script {
                     def changes = []
-                    def currentBuildObject = currentBuild.rawBuild
+                    def currentBuildObject = currentBuild
 
                     if (LAST_SUCCESSFUL_BUILD) {
-                        def lastSuccessfulBuildObject = currentBuildObject.getParent().getBuildByNumber(LAST_SUCCESSFUL_BUILD)
+                        def lastSuccessfulBuildObject = currentBuildObject.parent.builds.find { it.number == LAST_SUCCESSFUL_BUILD }
 
                         if (lastSuccessfulBuildObject) {
-                            def changeSet = currentBuildObject.getChangeSets()
-                            changes = changeSet.getItems().collect { item ->
-                                "${item.getCommitId()}: ${item.getMsg()}"
+                            def changeSets = currentBuildObject.changeSets
+                            changes = changeSets.collectMany { changeSet ->
+                                changeSet.getItems().collect { item ->
+                                    "${item.getCommitId()}: ${item.getMsgAnnotated()}"
+                                }
                             }
                         } else {
                             error "No information found for the last successful build number ${LAST_SUCCESSFUL_BUILD}"
