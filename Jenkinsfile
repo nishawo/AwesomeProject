@@ -28,21 +28,54 @@ pipeline {
                 }
             }
         }
-
         stage('Get Changes') {
             steps {
                 script {
                     // Get details about changes in the range of builds
-                    def changes = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/${env.LAST_SUCCESSFUL_BUILD},${env.CURRENT_BUILD}/api/json?tree=builds[changeSet[items[commitId,comment]{0,10}]]&pretty=true' | jq -r \'.builds[].changeSet.items[] | \"\\(.commitId): \\(.comment)\"'", returnStdout: true).trim()
+                    def changes = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/${env.LAST_SUCCESSFUL_BUILD},${env.CURRENT_BUILD}/api/json?tree=builds[changeSet[items[commitId,comment]{0,10}]]&pretty=true'", returnStdout: true).trim()
 
-                    if (changes) {
-                        echo "Changes between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}:"
-                        echo changes
+                    echo "Raw JSON response for changes: ${changes}"
+
+                    def parsedChanges
+                    try {
+                        parsedChanges = readJSON(text: changes)
+                        echo "Parsed JSON response for changes: ${parsedChanges}"
+                    } catch (Exception e) {
+                        error "Error parsing JSON response for changes: ${e.message}"
+                    }
+
+                    if (parsedChanges && parsedChanges.builds && parsedChanges.builds[0]?.changeSet?.items) {
+                        def changesList = parsedChanges.builds[0].changeSet.items.collect { item ->
+                            "${item.commitId}: ${item.comment}"
+                        }
+
+                        if (changesList) {
+                            echo "Changes between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}:"
+                            echo changesList.join('\n')
+                        } else {
+                            echo "No changes found between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}."
+                        }
                     } else {
-                        echo "No changes found between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}."
+                        echo "No valid changes information found in the JSON response."
                     }
                 }
             }
         }
+
+        // stage('Get Changes') {
+        //     steps {
+        //         script {
+        //             // Get details about changes in the range of builds
+        //             def changes = sh(script: "curl -s '${JENKINS_URL}/job/${JOB_NAME}/${env.LAST_SUCCESSFUL_BUILD},${env.CURRENT_BUILD}/api/json?tree=builds[changeSet[items[commitId,comment]{0,10}]]&pretty=true' | jq -r \'.builds[].changeSet.items[] | \"\\(.commitId): \\(.comment)\"'", returnStdout: true).trim()
+
+        //             if (changes) {
+        //                 echo "Changes between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}:"
+        //                 echo changes
+        //             } else {
+        //                 echo "No changes found between builds ${env.LAST_SUCCESSFUL_BUILD} and ${env.CURRENT_BUILD}."
+        //             }
+        //         }
+        //     }
+        // }
     }
 }
