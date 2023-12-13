@@ -13,9 +13,8 @@ pipeline {
             steps {
                 script {
                     def originalMessage = 'follow up on "customer issue" and some_special_characters: [] and /slashes'
-                    def escapedMessage = sh(script: "echo '\${originalMessage}' | sed 's/[][\\\\.*^\$(){}?+|&]/\\\\&/g'", returnStdout: true).trim()
+                    def escapedMessage = sh(script: """echo "\${originalMessage}" | sed 's/[][\\\\.*^$(){}?+|&]/\\\\&/g'""", returnStdout: true).trim()
                     echo "Escaped Message: ${escapedMessage}"
-                
                     // CURRENT_BUILD = currentBuild.getNumber()
                     // echo "Current Build for ${JOB_NAME}: ${CURRENT_BUILD}"
                 }
