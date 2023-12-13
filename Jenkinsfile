@@ -5,6 +5,10 @@ pipeline {
         JOB_NAME = 'test-pipeline'
         CURRENT_BUILD = ''
         LAST_SUCCESSFUL_BUILD = ''
+        PROJECT_NAME= "test"
+        ENVIRONMENT = "dev"
+        version = "1.0.2"
+        BUILD_USER = "test"
         
     }
 
@@ -15,6 +19,8 @@ pipeline {
                     def originalMessage = 'follow up on "customer issue" and some_special_characters: [] and /slashes'
                     def escapedMessage = sh(script: """echo "\${originalMessage}" | sed 's/[][\\\\.*^$(){}?+|&]/\\\\&/g'""", returnStdout: true).trim()
                     echo "Escaped Message: ${escapedMessage}"
+                    sh "curl -X POST -d \"projectName=${PROJECT_NAME}\" -d \"environment=${ENVIRONMENT}\" -d \"version=${version}\" -d \"buildUser=${BUILD_USER}\" -d \"escapedMessage='${escapedMessage}'\" -d \"deploymentStatus=success\" \"https://dev-api.paid.com:4903/admin/paid/versions\""     
+
                     // CURRENT_BUILD = currentBuild.getNumber()
                     // echo "Current Build for ${JOB_NAME}: ${CURRENT_BUILD}"
                 }
