@@ -16,7 +16,7 @@ pipeline {
         stage('Get Current Build') {
             steps {
                 script {
-                    def originalMessage = 'follow up on "customer issue" and some_special_characters: [] and /slashes'
+                    def commitMessages = 'follow up on "customer issue" and some_special_characters: [] and /slashes'
                     sh "curl -X POST -d \"projectName=${PROJECT_NAME}\" -d \"environment=${ENVIRONMENT}\" -d \"version=${version}\" -d \"buildUser=${BUILD_USER}\" -d \"escapedMessage='${commitMessages}'\" -d \"commitMessages=${commitMessages}\" -d \"escapedMessage='${escapedMessage}'\" -d \"deploymentStatus=success\" \"https://dev-api.paid.com:4903/admin/paid/versions\""     
 
                     // CURRENT_BUILD = currentBuild.getNumber()
