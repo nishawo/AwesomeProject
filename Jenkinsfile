@@ -10,9 +10,10 @@ pipeline {
                     // commitMessages = sh(script: "echo '${commitMessages}' | perl -MHTML::Entities -pe 'decode_entities(\$_)'", returnStdout: true).trim()
                     // echo "decoded ${commitMessages}"
                     // sh "curl --data-urlencode -X POST -d \"projectName=test\" -d \"environment=test\" -d \"version=123\" -d \"buildUser=456\" -d \"commitMessages='${commitMessages}'\" -d \"deploymentStatus=failed\"  \"https://dev-api.paid.com:4903/admin/paid/versions\""
-                    def commitMessage = "Partner's URL is something user & partner"
+                    def commitMessages = "Partner's URL is something user & partner"
                     echo "normal ${commitMessages}"
-                    commitMessages = sh(script: "echo '${commitMessages}' | perl -MHTML::Entities -pe 'decode_entities(\$_)'", returnStdout: true).trim()
+
+                    commitMessages = sh(script: "echo '\${commitMessages}' | perl -MHTML::Entities -pe 'decode_entities(\$_)'", returnStdout: true).trim()
                     echo "decoded ${commitMessages}"
                 }
             }
