@@ -9,7 +9,9 @@ pipeline {
                     echo "normal ${commitMessages2}"
 
                     commitMessages2 = sh(
-                        script: 'echo ${commitMessages2} | perl -MHTML::Entities -pe "decode_entities(\$_)"',
+                        script: """
+                            echo '\${commitMessages2}' | perl -MHTML::Entities -pe 'decode_entities(\$_)'
+                        """,
                         returnStdout: true
                     ).trim()
                     echo "decoded ${commitMessages2}"
