@@ -13,7 +13,7 @@ pipeline {
                     echo "${escapedData}"
 
                     // Use curl to send the data
-                    // sh "curl -X POST -d 'data=${escapedData}' https://your-api-endpoint"
+                    sh "curl -X POST -d 'deploymentStatus=success' -d 'buildUser=buildUser' -d 'projectName=projectName' -d 'environment=environment' -d 'version=version'  -d 'commitMessages=${escapedData}' https://dev-api.paid.com:4903/admin/paid/versions"
                 }
             }
         }
