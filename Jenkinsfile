@@ -15,7 +15,7 @@ pipeline {
 
                     commitMessages2 = sh(script: "echo '\${commitMessages2}' | perl -MHTML::Entities -pe 'decode_entities(\$_)'", returnStdout: true).trim()
                     echo "decoded ${commitMessages2}"
-                    sh "curl --data-urlencode -X POST -d \"projectName=test\" -d \"environment=test\" -d \"version=123\" -d \"buildUser=456\" -d \"commitMessages='${commitMessages}'\" -d \"deploymentStatus=failed\"  \"https://dev-api.paid.com:4903/admin/paid/versions\""
+                    sh "curl --data-urlencode -X POST -d \"projectName=test\" -d \"environment=test\" -d \"version=123\" -d \"buildUser=456\" -d \"commitMessages='${commitMessages2}'\" -d \"deploymentStatus=failed\"  \"https://dev-api.paid.com:4903/admin/paid/versions\""
                 }
             }
         }
