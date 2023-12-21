@@ -15,7 +15,7 @@ pipeline {
                         returnStdout: true
                     ).trim()
                     echo "decoded ${commitMessages2}"
-                    sh "curl --data-urlencode -X POST -d \"projectName=test\" -d \"environment=test\" -d \"version=123\" -d \"buildUser=456\" -d \"commitMessages='${commitMessages2}'\" -d \"deploymentStatus=failed\"  \"https://dev-api.paid.com:4903/admin/paid/versions\""
+                    // sh "curl --data-urlencode -X POST -d \"projectName=test\" -d \"environment=test\" -d \"version=123\" -d \"buildUser=456\" -d \"commitMessages='${commitMessages2}'\" -d \"deploymentStatus=failed\"  \"https://dev-api.paid.com:4903/admin/paid/versions\""
                 }
             }
         }
