@@ -20,6 +20,7 @@ const App = () => {
     }
     prepare();
   });
+  console.log('first');
   return (
     // <GestureHandlerRootView style={{flex: 1}}>
     <NavigationContainer>
